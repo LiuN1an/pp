@@ -1,0 +1,228 @@
+.modal {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  width: 40%;
+  max-width: 500px;
+  background-color: #fff;
+  border-radius: 8px;
+  transition: all 0.3s;
+  transform-origin: 0% 0%;
+  transform: scale(0.5) translate(-50%, -50%);
+  opacity: 0;
+
+  &.hidden {
+    transform: scale(0.5) translate(-50%, -50%);
+    opacity: 0;
+  }
+  &.show {
+    transform: scale(1) translate(-50%, -50%);
+    opacity: 1;
+  }
+
+  display: flex;
+  flex-direction: column;
+  .header {
+    flex-basis: 10%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 12px;
+    position: relative;
+
+    .title {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .close-icon {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+  }
+  .content {
+    flex: 1;
+    padding: 0px 12px;
+    .input {
+      &::placeholder {
+        font-weight: 600;
+        font-size: 14px;
+      }
+    }
+    .label {
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .account {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      .input {
+        margin-top: 4px;
+        width: 100%;
+      }
+    }
+    .pwd {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      .input {
+        margin-top: 4px;
+        width: 100%;
+      }
+    }
+  }
+  .footer {
+    flex-basis: 10%;
+    padding: 12px;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+
+    .options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .forget {
+      margin-left: 8px;
+      color: #1976d2;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 20px;
+      margin-bottom: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .register {
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 20px;
+      margin-bottom: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+.mobile-modal {
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  .header {
+    flex-basis: 10%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 12px;
+    position: relative;
+
+    .title {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .close-icon {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+  }
+  .content {
+    flex: 1;
+    padding: 0px 12px;
+    .input {
+      &::placeholder {
+        font-weight: 600;
+        font-size: 14px;
+      }
+    }
+    .label {
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .account {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      .input {
+        margin-top: 4px;
+        width: 100%;
+      }
+    }
+    .pwd {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      .input {
+        margin-top: 4px;
+        width: 100%;
+      }
+    }
+  }
+  .footer {
+    flex-basis: 10%;
+    padding: 12px;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+
+    .options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .forget {
+      margin-left: 8px;
+      color: #1976d2;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 20px;
+      margin-bottom: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .register {
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 20px;
+      margin-bottom: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .btn {
+      width: 100%;
+    }
+  }
+}
