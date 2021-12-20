@@ -43,7 +43,7 @@ export interface MaskRenderProps {
 }
 
 export interface EscapMaskProps {
-  render: FC
+  render: ReactElement
   isAllowMaskClose?: boolean
 }
 
@@ -61,7 +61,7 @@ export const EscapeMask: FC<EscapMaskProps> = observer(
           className={classnames('cover', isOpen ? 'show' : 'hidden')}
           onClick={isAllowMaskClose ? handleClick : null}
         />
-        <Render />
+        {Render}
       </>
     )
   }
@@ -72,7 +72,7 @@ export interface PopSwiperRenderProps {
 }
 
 export interface EscapPopSwiperProps {
-  render: FC
+  render: ReactElement
 }
 
 export const EscapePopSwiper: FC<EscapPopSwiperProps> = observer(
@@ -83,7 +83,7 @@ export const EscapePopSwiper: FC<EscapPopSwiperProps> = observer(
       <div
         className={classnames('pop-swiper', isOpen ? 'show' : 'hidden')}
       >
-        <Render />
+        {Render}
       </div>
     )
   }
@@ -144,6 +144,6 @@ export const createSnack = (props: {
         </StoreProvider>
       )
     },
-    store: store,
+    store,
   })
 }

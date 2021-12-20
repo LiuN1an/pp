@@ -22,7 +22,7 @@ export const useFade: () => UseFadeReturn = () => {
   useEffect(() => {
     setTimeout(() => {
       ;(escapeStore as Escape).changeShow(currentMask, true)
-    })
+    }, 16)
   }, [])
 
   const setOpen = useCallback(

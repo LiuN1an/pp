@@ -3,6 +3,8 @@ import { MobileUserLogin, UserLogin } from '@widget'
 import React, { useCallback } from 'react'
 import { isMobile } from 'react-device-detect'
 import './app.less'
+import { requestLogin, requestRegister } from './common/api'
+import { getUrl } from './common/mock'
 import { StoreProvider, useCommonStore } from './common/store'
 
 export const App = () => {
@@ -11,12 +13,24 @@ export const App = () => {
     makeEscape({
       children: ({ id }) => {
         return isMobile ? (
-          <StoreProvider value={{ id }}>
-            <EscapePopSwiper render={MobileUserLogin} />
+          <StoreProvider
+            value={{
+              id,
+              loginUrl: getUrl(requestLogin.url),
+              registerUrl: getUrl(requestRegister.url),
+            }}
+          >
+            <EscapePopSwiper render={<MobileUserLogin />} />
           </StoreProvider>
         ) : (
-          <StoreProvider value={{ id }}>
-            <EscapeMask render={UserLogin} />
+          <StoreProvider
+            value={{
+              id,
+              loginUrl: getUrl(requestLogin.url),
+              registerUrl: getUrl(requestRegister.url),
+            }}
+          >
+            <EscapeMask render={<UserLogin />} />
           </StoreProvider>
         )
       },

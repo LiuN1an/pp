@@ -1,3 +1,4 @@
+import { requestLogin, requestRegister } from '@/common/api'
 import { StoreProvider, useCommonStore } from '@/common/store'
 import { Escape } from '@/common/store/Escape'
 import {
@@ -6,14 +7,15 @@ import {
     EscapePopSwiper,
     makeEscape
 } from '@utils/escape'
-import { processResponse } from '@utils/request'
+import { processResponse, request } from '@utils/request'
 import React, { useCallback, useState } from 'react'
 import { MobileUserRegister, UserResigter } from './register'
 
 interface UseLoginReturn {
-  account: string
+  username: string
   pwd: string
-  handleChangeAccount: (e: React.ChangeEvent<HTMLInputElement>) => void
+  isLoading: boolean
+  handleChangeUserName: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleChangePwd: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleLogin: () => void
   handleRegister: () => void
@@ -26,7 +28,6 @@ export const useLogin: (props: {
   onLogin?: (prop: any) => void
   clickForget?: () => void
   clickRegister?: () => void
-  url?: string
   isMobile?: boolean
 }) => UseLoginReturn = ({
   isMobile = false,
@@ -35,16 +36,16 @@ export const useLogin: (props: {
   onLogin,
   clickForget,
   clickRegister,
-  url,
 }) => {
-  const { id: loginId, escapeStore } = useCommonStore()
-  const [account, setAccount] = useState('')
+  const { id: loginId, escapeStore, loginUrl, ...rest } = useCommonStore()
+  const [isLoading, setLoading] = useState(false)
+  const [username, setusername] = useState('')
   const [pwd, setPwd] = useState('')
 
-  const handleChangeAccount = useCallback(
+  const handleChangeUserName = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
-      setAccount(value)
+      setusername(value)
     },
     []
   )
@@ -58,10 +59,11 @@ export const useLogin: (props: {
   )
 
   const handleLogin = useCallback(async () => {
+    setLoading(true)
     if (onLogin) {
       try {
         await onLogin?.({
-          account,
+          username,
           pwd,
         })
         createSnack({
@@ -77,17 +79,20 @@ export const useLogin: (props: {
           color: '#d32f2f',
           isMobile,
         })
+      } finally {
+        setLoading(false)
       }
     } else {
-      if (url) {
-        const response = await fetch(url, {
-          method: 'post',
-          body: JSON.stringify({
-            account,
+      if (loginUrl) {
+        const v = await request({
+          url: loginUrl,
+          method: requestLogin.method,
+          data: {
+            username,
             pwd,
-          }),
+          },
         })
-        const v = await response.json()
+
         let result = null
         if (onProcessResponse) {
           result = onProcessResponse(v)
@@ -98,6 +103,7 @@ export const useLogin: (props: {
           createSnack({
             content: <span>登录成功</span>,
             store: escapeStore,
+            isMobile,
           })
           handleClose()
         } else {
@@ -105,11 +111,13 @@ export const useLogin: (props: {
             content: <span>登录失败，请检查</span>,
             store: escapeStore,
             color: '#d32f2f',
+            isMobile,
           })
         }
+        setLoading(false)
       }
     }
-  }, [onLogin])
+  }, [])
 
   const handleRegister = useCallback(() => {
     if (clickRegister) {
@@ -119,8 +127,8 @@ export const useLogin: (props: {
         makeEscape({
           children: ({ id }) => {
             return (
-              <StoreProvider value={{ id: id, loginId }}>
-                <EscapePopSwiper render={MobileUserRegister} />
+              <StoreProvider value={{ id, loginId, ...rest }}>
+                <EscapePopSwiper render={<MobileUserRegister />} />
               </StoreProvider>
             )
           },
@@ -130,8 +138,8 @@ export const useLogin: (props: {
         makeEscape({
           children: ({ id }) => {
             return (
-              <StoreProvider value={{ id: id, loginId }}>
-                <EscapeMask render={UserResigter} />
+              <StoreProvider value={{ id, loginId, ...rest }}>
+                <EscapeMask render={<UserResigter />} />
               </StoreProvider>
             )
           },
@@ -158,9 +166,10 @@ export const useLogin: (props: {
   }, [])
 
   return {
-    account,
+    username,
     pwd,
-    handleChangeAccount,
+    isLoading,
+    handleChangeUserName,
     handleChangePwd,
     handleLogin,
     handleRegister,
@@ -169,10 +178,11 @@ export const useLogin: (props: {
 }
 
 interface UseRegisterReturn {
-  account: string
+  username: string
   pwd: string
   confirmPwd: string
-  handleChangeAccount: (e: React.ChangeEvent<HTMLInputElement>) => void
+  isLoading: boolean
+  handleChangeUserName: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleChangePwd: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleConfirmPwd: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleRegister: () => void
@@ -182,22 +192,23 @@ export const useRegister: (props: {
   handleClose?: () => void
   onProcessResponse?: (v: any) => boolean
   onRegister?: (prop: any) => void
-  url?: string
+  isMobile?: boolean
 }) => UseRegisterReturn = ({
   onRegister,
   handleClose,
-  url,
   onProcessResponse,
+  isMobile = false,
 }) => {
-  const { escapeStore, loginId } = useCommonStore()
-  const [account, setAccount] = useState('')
+  const { escapeStore, loginId, registerUrl } = useCommonStore()
+  const [isLoading, setLoading] = useState(false)
+  const [username, setUserName] = useState('')
   const [pwd, setPwd] = useState('')
   const [confirmPwd, setConfirmPwd] = useState('')
 
-  const handleChangeAccount = useCallback(
+  const handleChangeUserName = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
-      setAccount(value)
+      setUserName(value)
     },
     []
   )
@@ -219,12 +230,11 @@ export const useRegister: (props: {
   )
 
   const handleRegister = useCallback(async () => {
-    handleClose()
-    ;(escapeStore as Escape).close(loginId)
+    setLoading(true)
     if (onRegister) {
       try {
         await onRegister?.({
-          account,
+          username,
           pwd,
         })
         createSnack({ content: <span>登录成功</span>, store: escapeStore })
@@ -236,17 +246,20 @@ export const useRegister: (props: {
           store: escapeStore,
           color: '#d32f2f',
         })
+      } finally {
+        setLoading(false)
       }
     } else {
-      if (url) {
-        const response = await fetch(url, {
-          method: 'post',
-          body: JSON.stringify({
-            account,
+      if (registerUrl) {
+        const v = await request({
+          url: registerUrl,
+          method: requestRegister.method,
+          data: {
+            username,
             pwd,
-          }),
+            confirmPwd,
+          },
         })
-        const v = await response.json()
         let result = null
         if (onProcessResponse) {
           result = onProcessResponse(v)
@@ -255,26 +268,31 @@ export const useRegister: (props: {
         }
         if (result) {
           createSnack({
-            content: <span>登录成功</span>,
+            content: <span>注册成功</span>,
             store: escapeStore,
+            isMobile,
           })
           handleClose()
+          ;(escapeStore as Escape).close(loginId)
         } else {
           createSnack({
-            content: <span>登录失败，请检查</span>,
+            content: <span>注册失败，请检查</span>,
             store: escapeStore,
             color: '#d32f2f',
+            isMobile,
           })
         }
+        setLoading(false)
       }
     }
   }, [])
 
   return {
-    account,
+    username,
     pwd,
     confirmPwd,
-    handleChangeAccount,
+    isLoading,
+    handleChangeUserName,
     handleChangePwd,
     handleConfirmPwd,
     handleRegister,

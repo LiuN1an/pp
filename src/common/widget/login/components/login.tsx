@@ -1,5 +1,5 @@
 import CloseSVG from '@assets/close.svg'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Input from '@mui/material/Input'
 import { useFade } from '@utils/hooks'
 import classnames from 'classnames'
@@ -18,33 +18,29 @@ export interface UserLoginProps {
    * 登录按钮点击时触发的函数，如果为空则走默认的url逻辑
    */
   onLogin?: (props: {
-    account: string
+    username: string
     pwd: string
     verify?: string
   }) => void
-  /**
-   * 请求的url
-   */
-  url?: string
   clickRegister?: () => void
   clickForget?: () => void
 }
 
 export const UserLogin: FC<UserLoginProps> = observer(
-  ({ onLogin, url, clickRegister, clickForget }) => {
+  ({ onLogin, clickRegister, clickForget }) => {
     const { isOpen, handleClose } = useFade()
 
     const {
-      account,
+      username,
       pwd,
-      handleChangeAccount,
+      isLoading,
+      handleChangeUserName,
       handleChangePwd,
       handleRegister,
       handleForget,
       handleLogin,
     } = useLogin({
       onLogin,
-      url,
       handleClose,
       clickRegister,
       clickForget,
@@ -62,8 +58,8 @@ export const UserLogin: FC<UserLoginProps> = observer(
             <Input
               className='input'
               placeholder='请输入用户名'
-              value={account}
-              onChange={handleChangeAccount}
+              value={username}
+              onChange={handleChangeUserName}
             />
           </div>
           <div className='pwd'>
@@ -86,13 +82,14 @@ export const UserLogin: FC<UserLoginProps> = observer(
               还没有账户?
             </span>
           </div>
-          <Button
+          <LoadingButton
+            loading={isLoading}
             variant='contained'
             className='btn'
             onClick={handleLogin}
           >
             立即登录
-          </Button>
+          </LoadingButton>
         </div>
       </div>
     )
@@ -100,20 +97,20 @@ export const UserLogin: FC<UserLoginProps> = observer(
 )
 
 export const MobileUserLogin: FC<UserLoginProps> = observer(
-  ({ onLogin, url, clickRegister, clickForget }) => {
+  ({ onLogin, clickRegister, clickForget }) => {
     const { handleClose } = useFade()
 
     const {
-      account,
+      username,
       pwd,
+      isLoading,
       handleLogin,
-      handleChangeAccount,
+      handleChangeUserName,
       handleChangePwd,
       handleRegister,
       handleForget,
     } = useLogin({
       onLogin,
-      url,
       handleClose,
       isMobile: true,
       clickRegister,
@@ -132,8 +129,8 @@ export const MobileUserLogin: FC<UserLoginProps> = observer(
             <Input
               className='input'
               placeholder='请输入用户名'
-              value={account}
-              onChange={handleChangeAccount}
+              value={username}
+              onChange={handleChangeUserName}
             />
           </div>
           <div className='pwd'>
@@ -156,13 +153,14 @@ export const MobileUserLogin: FC<UserLoginProps> = observer(
               还没有账户?
             </span>
           </div>
-          <Button
+          <LoadingButton
+            loading={isLoading}
             variant='contained'
             className='btn'
             onClick={handleLogin}
           >
             立即登录
-          </Button>
+          </LoadingButton>
         </div>
       </div>
     )

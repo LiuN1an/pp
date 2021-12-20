@@ -32,3 +32,4 @@ export const StoreProvider: FC<StoreProviderProps> = ({
     </Store.Provider>
   )
 }
+;(window as unknown as { store: CommonContext }).store = context

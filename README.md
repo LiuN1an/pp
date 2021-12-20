@@ -8,3 +8,5 @@
 目前已实现的
 - 通过实现Escape类来统一管理一切react-dom的逃逸节点的生命周期
 - 定制官方遮盖罩组件，popSwiper组件以及Snack组件
+- 调用时需要配合useFade的hook来获取动画特效的open变量以及关闭动画的函数
+- 特定组件需要在Provider中指定所需的值，比如url，id等

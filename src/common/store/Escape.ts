@@ -1,4 +1,9 @@
-import { action, computed, makeAutoObservable, observable } from 'mobx'
+import {
+    action,
+    computed,
+    makeAutoObservable,
+    observable
+} from 'mobx'
 
 /**
  * 管理逃逸的类
