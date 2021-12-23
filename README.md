@@ -10,3 +10,8 @@
 - 定制官方遮盖罩组件，popSwiper组件以及Snack组件
 - 调用时需要配合useFade的hook来获取动画特效的open变量以及关闭动画的函数
 - 特定组件需要在Provider中指定所需的值，比如url，id等
+
+#### 组件类目
+
+- 登录注册弹框及其机制，提供userStore来记录登录状态，注意使用时不要在context覆盖userStore的命名
+- TODO： 分类+瀑布流，需要考虑形式

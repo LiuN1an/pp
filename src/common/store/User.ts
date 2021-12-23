@@ -10,4 +10,8 @@ export class User {
   @action public hasLogin() {
     this.isLogin = true
   }
+
+  @action public quitLogin() {
+    this.isLogin = false
+  }
 }

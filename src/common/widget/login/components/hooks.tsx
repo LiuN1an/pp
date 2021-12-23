@@ -37,7 +37,13 @@ export const useLogin: (props: {
   clickForget,
   clickRegister,
 }) => {
-  const { id: loginId, escapeStore, loginUrl, ...rest } = useCommonStore()
+  const {
+    id: loginId,
+    escapeStore,
+    userStore,
+    loginUrl,
+    ...rest
+  } = useCommonStore()
   const [isLoading, setLoading] = useState(false)
   const [username, setusername] = useState('')
   const [pwd, setPwd] = useState('')
@@ -59,6 +65,15 @@ export const useLogin: (props: {
   )
 
   const handleLogin = useCallback(async () => {
+    if (!username || !pwd) {
+      createSnack({
+        content: <span>用户名或密码不能为空</span>,
+        store: escapeStore,
+        color: '#d32f2f',
+        isMobile,
+      })
+      return
+    }
     setLoading(true)
     if (onLogin) {
       try {
@@ -71,6 +86,7 @@ export const useLogin: (props: {
           store: escapeStore,
           isMobile,
         })
+        userStore?.hasLogin()
         handleClose()
       } catch (e) {
         createSnack({
@@ -105,6 +121,7 @@ export const useLogin: (props: {
             store: escapeStore,
             isMobile,
           })
+          userStore?.hasLogin()
           handleClose()
         } else {
           createSnack({
@@ -117,7 +134,7 @@ export const useLogin: (props: {
         setLoading(false)
       }
     }
-  }, [])
+  }, [username, pwd, loginUrl])
 
   const handleRegister = useCallback(() => {
     if (clickRegister) {
@@ -147,7 +164,7 @@ export const useLogin: (props: {
         })
       }
     }
-  }, [])
+  }, [username, pwd, loginId, rest])
 
   const handleForget = useCallback(() => {
     if (clickForget) {
@@ -199,7 +216,7 @@ export const useRegister: (props: {
   onProcessResponse,
   isMobile = false,
 }) => {
-  const { escapeStore, loginId, registerUrl } = useCommonStore()
+  const { escapeStore, loginId, registerUrl, userStore } = useCommonStore()
   const [isLoading, setLoading] = useState(false)
   const [username, setUserName] = useState('')
   const [pwd, setPwd] = useState('')
@@ -230,6 +247,24 @@ export const useRegister: (props: {
   )
 
   const handleRegister = useCallback(async () => {
+    if (!username || !pwd || !confirmPwd) {
+      createSnack({
+        content: <span>请填写完整</span>,
+        store: escapeStore,
+        color: '#d32f2f',
+        isMobile,
+      })
+      return
+    }
+    if (pwd !== confirmPwd) {
+      createSnack({
+        content: <span>两次输入密码不同</span>,
+        store: escapeStore,
+        color: '#d32f2f',
+        isMobile,
+      })
+      return
+    }
     setLoading(true)
     if (onRegister) {
       try {
@@ -238,6 +273,7 @@ export const useRegister: (props: {
           pwd,
         })
         createSnack({ content: <span>登录成功</span>, store: escapeStore })
+        userStore?.hasLogin()
         handleClose()
         ;(escapeStore as Escape).close(loginId)
       } catch (e) {
@@ -272,6 +308,7 @@ export const useRegister: (props: {
             store: escapeStore,
             isMobile,
           })
+          userStore?.hasLogin()
           handleClose()
           ;(escapeStore as Escape).close(loginId)
         } else {
@@ -285,7 +322,7 @@ export const useRegister: (props: {
         setLoading(false)
       }
     }
-  }, [])
+  }, [username, pwd, confirmPwd, loginId, registerUrl])
 
   return {
     username,

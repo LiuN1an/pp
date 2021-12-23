@@ -16,7 +16,7 @@ export const requestRegister: MockRequest = {
   url: 'register',
   method: 'post',
   response: {
-    code: 10,
+    code: 0,
     msg: '',
     data: {
       token: '',
